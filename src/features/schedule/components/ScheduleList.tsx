@@ -1,21 +1,57 @@
+import { useState } from 'react'
 import { useScheduleStore} from '../store'
 
 export const ScheduleList = () => { 
 
     const { schedules, addSchedule } = useScheduleStore()
+    const [title, setTitle] = useState('')
+    const [date, setDate] = useState('')
+    const [memo, setMemo] = useState('')
 
-    const handleAdd = () => {
+    const handleSubmit = () => {
+        if (!title || !date) return
         addSchedule({
             id: crypto.randomUUID(),
-            title: 'ミルク',
-            date: '2025-03-21',
-            memo: '120ml',
+            title,
+            date, 
+            memo,
         })
+
+        setTitle('')
+        setDate('')
+        setMemo('')
     }
+
+    // const handleAdd = () => {
+    //     addSchedule({
+    //         id: crypto.randomUUID(),
+    //         title: 'ミルク',
+    //         date: '2025-03-21',
+    //         memo: '120ml',
+    //     })
+    // }
 
     return(
         <div>
-            <button onClick={handleAdd}>予定を追加</button>
+            <h2>予定を追加</h2>
+            <input
+            placeholder="タイトル"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            />
+            <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            />
+            <textarea
+            placeholder="メモ"
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            />
+            <button onClick={handleSubmit}>追加</button>
+
+            <hr />
 
             {schedules.length === 0 ? (
                 <p>まだ予定はありません</p>
@@ -24,6 +60,7 @@ export const ScheduleList = () => {
                     {schedules.map((s) => (
                         <li key={s.id}>
                             {s.date} / {s.title}
+                            {s.memo && <div>{s.memo}</div>}
                         </li>
                     ))}
                 </ul>
