@@ -4,6 +4,7 @@ import  type { Schedule } from './types'
 type ScheduleState = {
     schedules: Schedule[]
     addSchedule: (schedule: Schedule) => void
+    removeSchedule: (id: string) => void
 }
 
 export const useScheduleStore = create<ScheduleState>((set) => ({
@@ -11,5 +12,9 @@ export const useScheduleStore = create<ScheduleState>((set) => ({
     addSchedule: (schedule) =>
         set((state) => ({
             schedules: [...state.schedules, schedule],
+        })),
+        removeSchedule: (id) =>
+        set((state) => ({
+            schedules: state.schedules.filter((s) => s.id != id),
         })),
 }))

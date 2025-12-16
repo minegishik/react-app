@@ -3,7 +3,7 @@ import { useScheduleStore} from '../store'
 
 export const ScheduleList = () => { 
 
-    const { schedules, addSchedule } = useScheduleStore()
+    const { schedules, addSchedule,removeSchedule } = useScheduleStore()
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
     const [memo, setMemo] = useState('')
@@ -61,6 +61,9 @@ export const ScheduleList = () => {
                         <li key={s.id}>
                             {s.date} / {s.title}
                             {s.memo && <div>{s.memo}</div>}
+                            <button onClick={() => removeSchedule(s.id)}>
+                                削除
+                            </button>
                         </li>
                     ))}
                 </ul>
