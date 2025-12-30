@@ -1,32 +1,43 @@
 import { useState } from 'react'
-import  { useScheduleStore } from '../store'
+import type { Schedule } from '../types'
 
 
-export const ScheduleForm = () => {
-    const addSchedule = useScheduleStore((state) => state.addSchedule)
+type Props = {
+    initialData?: Schedule
+    onSubmit: (schedule: Schedule) => void
+    onCancel?: () => void
+}
 
-    const [title, setTitle] = useState('')
-    const [date, setDate] = useState('')
-    const [memo, setMemo] = useState('')
+export const ScheduleForm = ({
+    initialData,
+    onSubmit,
+    onCancel,
+}: Props) => {
+    
+    const [title, setTitle] = useState(initialData?.title ?? '')
+    const [date, setDate] = useState(initialData?.date ?? '')
+    const [memo, setMemo] = useState(initialData?.memo ?? '')
 
     const handleSubmit = () => {
         if (!title || !date) return
 
-        addSchedule({
-            id: crypto.randomUUID(),
+        onSubmit({
+            id: initialData?.id ?? crypto.randomUUID(),
             title,
             date,
             memo,
         })
 
-        setTitle('')
-        setDate('')
-        setMemo('')
+        if(!initialData){
+            setTitle('')
+            setDate('')
+            setMemo('')
+        }
     }
 
     return (
         <div>
-            <h2>予定追加</h2>
+            <h2>{initialData ? '予定編集' : '予定追加' }</h2>
 
             <input
                 type="text"
@@ -48,7 +59,13 @@ export const ScheduleForm = () => {
             />
 
 
-            <button onClick={handleSubmit}>追加</button>
+            <button onClick={handleSubmit}>
+                {initialData ? '更新' : '追加' }
+            </button>
+
+            {onCancel && (
+                <button onClick={onCancel}>キャンセル</button>
+            )}
         </div>
     )
 }
